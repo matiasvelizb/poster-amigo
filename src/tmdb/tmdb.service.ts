@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { SearchMovie } from '@interfaces/search-movie.interface';
+import { SearchMovieQueryDto } from '@dtos/search-movie-query.dto';
 
 @Injectable()
 export class TmdbService {
@@ -39,7 +40,11 @@ export class TmdbService {
     }
   }
 
-  async searchMovie(query: string, page: number = 1): Promise<SearchMovie> {
-    return this.makeGetRequest<SearchMovie>('/search/movie', { query, page });
+  async searchMovie(
+    searchMovieQuery: SearchMovieQueryDto,
+  ): Promise<SearchMovie> {
+    return this.makeGetRequest<SearchMovie>('/search/movie', {
+      ...searchMovieQuery,
+    });
   }
 }

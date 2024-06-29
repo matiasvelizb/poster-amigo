@@ -10,8 +10,7 @@ export class TmdbController {
   constructor(private readonly tmdbService: TmdbService) {}
 
   @Get('search/movie')
-  async searchMovie(@Query() query: SearchMovieQueryDto) {
-    const { query: searchQuery, page } = query;
-    return this.tmdbService.searchMovie(searchQuery, page);
+  async searchMovie(@Query() searchMovieQuery: SearchMovieQueryDto) {
+    return this.tmdbService.searchMovie(searchMovieQuery);
   }
 }
