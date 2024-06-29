@@ -1,21 +1,27 @@
-import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
+import { SearchMovie } from '@interfaces/search-movie.interface';
 
 @Injectable()
 export class TmdbService {
-  private readonly apiUrl = 'https://api.themoviedb.org/3';
+  private readonly apiUrl: string;
   private readonly token: string;
+  private readonly logger = new Logger(TmdbService.name);
 
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {
-    this.token = this.configService.get<string>('TMDB_ACCESS_TOKEN');
+    this.apiUrl = this.configService.get<string>('tmdb.apiUrl');
+    this.token = this.configService.get<string>('tmdb.token');
   }
 
-  private async makeGetRequest(endpoint: string, params: any = {}) {
+  private async makeGetRequest<T>(
+    endpoint: string,
+    params: any = {},
+  ): Promise<T> {
     const url = `${this.apiUrl}${endpoint}`;
     const headers = {
       accept: 'application/json',
@@ -24,20 +30,16 @@ export class TmdbService {
 
     try {
       const response = await firstValueFrom(
-        this.httpService.get(url, { headers, params }),
+        this.httpService.get<T>(url, { headers, params }),
       );
       return response.data;
     } catch (error) {
-      console.error('Error:', error.message);
-      throw error;
+      this.logger.error(`Error making GET request to ${url}`, error.stack);
+      throw new Error(`Failed to fetch data from TMDB API: ${error.message}`);
     }
   }
 
-  async getAuthentication() {
-    return this.makeGetRequest('/authentication');
-  }
-
-  async searchMovie(query: string, page: number = 1) {
-    return this.makeGetRequest('/search/movie', { query, page });
+  async searchMovie(query: string, page: number = 1): Promise<SearchMovie> {
+    return this.makeGetRequest<SearchMovie>('/search/movie', { query, page });
   }
 }

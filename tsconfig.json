@@ -16,6 +16,10 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@dtos/*": ["src/common/dtos/*"],
+      "@interfaces/*": ["src/common/interfaces/*"]
+    }
   }
 }

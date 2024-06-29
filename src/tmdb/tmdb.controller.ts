@@ -1,5 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { TmdbService } from './tmdb.service';
+import { SearchMovieQueryDto } from '@dtos/search-movie-query.dto';
 
 @Controller({
   path: 'tmdb',
@@ -8,16 +9,9 @@ import { TmdbService } from './tmdb.service';
 export class TmdbController {
   constructor(private readonly tmdbService: TmdbService) {}
 
-  @Get('authentication')
-  async getAuthentication() {
-    return this.tmdbService.getAuthentication();
-  }
-
   @Get('search/movie')
-  async searchMovie(
-    @Query('query') query: string,
-    @Query('page') page: number,
-  ) {
-    return this.tmdbService.searchMovie(query, page);
+  async searchMovie(@Query() query: SearchMovieQueryDto) {
+    const { query: searchQuery, page } = query;
+    return this.tmdbService.searchMovie(searchQuery, page);
   }
 }
