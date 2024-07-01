@@ -6,6 +6,7 @@ import { join } from 'path';
 import { configValidationSchema } from './config/config.validation';
 import tmdbConfig from './config/tmdb.config';
 import { TmdbModule } from './tmdb/tmdb.module';
+import { PosterModule } from './poster/poster.module';
 
 @Module({
   imports: [
@@ -16,8 +17,10 @@ import { TmdbModule } from './tmdb/tmdb.module';
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
+      serveRoot: '/',
     }),
     TmdbModule,
+    PosterModule,
   ],
 })
 export class AppModule {}
