@@ -25,11 +25,9 @@ export class PosterService {
     }
   }
 
-  async downloadImage(imageUrl: string, id: number): Promise<string> {
-    const extension = path.extname(imageUrl);
-    const newFileName = `${id}${extension}`;
-    const filePath = path.join(this.postersFolder, newFileName);
-    const servingUrl = `/posters/${newFileName}`;
+  async downloadImage(imageUrl: string, fileName: string): Promise<string> {
+    const filePath = path.join(this.postersFolder, fileName);
+    const servingUrl = `/posters/${fileName}`;
 
     if (fs.existsSync(filePath)) {
       return servingUrl;
